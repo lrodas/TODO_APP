@@ -1,12 +1,15 @@
 <div
   [style.backgroundImage]="getBackgroundImage()"
+  [style.backgroundSize]="'cover'"
   [class]="isDesktop ? 'bg-center w-screen h-96' : 'bg-center w-screen h-64'"
-  style="background-repeat: no-repeat; background-size: cover"
 >
-  <div class="container mx-auto w-full h-full px-4 py-8">
+  <div class="container mx-auto w-full h-full px-4 py-8 animate__fadeIn">
     <div class="flex flex-col items-center justify-start h-dvh mt-25">
       <div class="text-left text-white">
-        <h1 class="text-4xl md:text-6xl font-bold mb-4">TO DO</h1>
+        <div class="flex flex-row justify-between">
+          <h1 class="text-4xl md:text-6xl font-bold mb-4">TO DO</h1>
+          <theme-selector></theme-selector>
+        </div>
         <p class="text-lg md:text-xl mb-8">
           Descubre características y funcionalidades increíbles que mejorarán tu
           experiencia.
@@ -17,74 +20,68 @@
           class="max-w-full rounded overflow-hidden shadow-lg flex items-center"
           [style.backgroundColor]="'var(--bg-secondary)'"
         >
-          <div class="w-6 h-6 rounded-full border-1 ml-6" [style.color]="'var(--text-secondary)'"></div>
+          <div
+            class="w-6 h-6 rounded-full border-1 ml-6"
+            [style.color]="'var(--text-secondary)'"
+          ></div>
           <input
             id="task"
             type="text"
             class="w-full"
             placeholder="Crear un nueva tarea"
+            formControlName="title"
+            (keyup.enter)="addTodo()"
           />
         </div>
       </form>
 
       <div
-          class="flex flex-col items-start justify-between max-w-full rounded overflow-hidden shadow-lg w-xl h-96 mt-5"
-          [style.backgroundColor]="'var(--bg-secondary)'">
-
-        <div class="w-full" style="overflow-y: auto;">
-          <div class="flex flex-row mr-2 ml-3 mt-5 mb-5" [style.color]="'var(--text-primary)'">
-            <div class="w-6 h-6 rounded-full border-1 mr-5 ml-3" [style.color]="'var(--text-secondary)'"></div>
-            <p class="text-xl">hola mundo</p>
-          </div>
-
-          <div class="w-full h-px" [style.backgroundColor]="'var(--border-color)'"></div>
-
-          <div class="flex flex-row mr-2 ml-3 mt-5 mb-5" [style.color]="'var(--text-secondary)'">
-            <div class="w-6 h-6 rounded-full border-0 mr-5 ml-3"
-                 style="background-image: linear-gradient(to right, var(--accent-completed-gradient-start), var(--accent-completed-gradient-end));">
-              <div
-                class="w-full h-full rounded-full"
-                style="background-image: url(assets/images/icon-check.svg); background-size: 50%; background-position: center; background-repeat: no-repeat;">
-              </div>
+        class="flex flex-col items-start justify-between max-w-full rounded overflow-hidden shadow-lg w-xl h-96 mt-5"
+        [style.backgroundColor]="'var(--bg-secondary)'"
+      >
+        <div class="w-full overflow-y-auto">
+          @for (todo of filteredTodos; track trackByFn($index, todo); let i = $index) {
+            <div
+              class="flex flex-row mr-2 ml-3 mt-5 mb-5 animate__fadeIn"
+              [style.color]="'var(--text-secondary)'"
+            >
+              @if (todo.completed) {
+                <div
+                  class="w-6 h-6 rounded-full border-0 mr-5 ml-3 bg-gradient"
+                  (click)="toggleTodo(todo)"
+                >
+                  <div class="w-full h-full rounded-full bg-check-icon"></div>
+                </div>
+              } @else {
+                <div
+                  class="w-6 h-6 rounded-full border-1 mr-5 ml-3"
+                  [style.color]="'var(--text-secondary)'"
+                  (click)="toggleTodo(todo)"
+                ></div>
+              }
+              <p [class]="{'text-xl': true, 'line-through': todo.completed}">{{ todo.title }}</p>
             </div>
-            <p class="text-xl line-through">Jog around the park 3x</p>
-          </div>
-
-          <div class="w-full h-px" [style.backgroundColor]="'var(--border-color)'"></div>
-
-          <div class="flex flex-row mr-2 ml-3 mt-5 mb-5" [style.color]="'var(--text-primary)'">
-            <div class="w-6 h-6 rounded-full border-1 mr-5 ml-3" [style.color]="'var(--text-secondary)'"></div>
-            <p class="text-xl">hola mundo</p>
-          </div>
-
-          <div class="w-full h-px" [style.backgroundColor]="'var(--border-color)'"></div>
-          <div class="flex flex-row mr-2 ml-3 mt-5 mb-5" [style.color]="'var(--text-primary)'">
-            <div class="w-6 h-6 rounded-full border-1 mr-5 ml-3" [style.color]="'var(--text-secondary)'"></div>
-            <p class="text-xl">hola mundo</p>
-          </div>
-
-          <div class="w-full h-px" [style.backgroundColor]="'var(--border-color)'"></div>
-
-          <div class="flex flex-row mr-2 ml-3 mt-5 mb-5" [style.color]="'var(--text-primary)'">
-            <div class="w-6 h-6 rounded-full border-1 mr-5 ml-3" [style.color]="'var(--text-secondary)'"></div>
-            <p class="text-xl">hola mundo</p>
-          </div>
-
-          <div class="w-full h-px" [style.backgroundColor]="'var(--border-color)'"></div>
+            @if (i < todos.length - 1) {
+              <div
+                class="w-full h-px"
+                [style.backgroundColor]="'var(--border-color)'"
+              ></div>
+            }
+          }
         </div>
         <div
           class="flex flex-row justify-between items-center w-full p-4"
-          [style.color]="'var(--text-secondary)'">
-          <p> Quedan 5</p>
+          [style.color]="'var(--text-secondary)'"
+        >
+          <p>Quedan {{ retrievePendingTodos() }}</p>
           <div class="flex flex-row">
-            <p class="m-1" [style.color]="'var(--text-primary)'">Todos</p>
-            <p class="m-1">Activas</p>
-            <p class="m-1">Completadas</p>
+            <p [class]="filter == 'all' ? 'm-1 text-primary': 'm-1 cursor-pointer'" (click)="filter = 'all'; filterTodos()">Todos</p>
+            <p [class]="filter == 'pending' ? 'm-1 text-primary': 'm-1 cursor-pointer'" (click)="filter = 'pending'; filterTodos()">Activas</p>
+            <p [class]="filter == 'completed' ? 'm-1 text-primary': 'm-1 cursor-pointer'" (click)="filter = 'completed'; filterTodos()">Completadas</p>
           </div>
-          <p>Eliminar</p>
+          <p class="cursor-pointer" (click)="clearCompletedTodos()">Eliminar</p>
         </div>
       </div>
-      <theme-selector></theme-selector>
     </div>
   </div>
 </div>

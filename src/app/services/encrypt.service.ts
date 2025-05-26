@@ -13,7 +13,7 @@ export class EncryptService {
 
   constructor() { }
 
-  encrypt(data: string): string {
+  public encrypt(data: string): string {
     const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(data), this.key, {
       keySize: 128 / 8,
       iv: this.iv,
@@ -23,7 +23,7 @@ export class EncryptService {
     return encrypted.toString();
   }
 
-  decrypt<T>(data: string): T {
+  public decrypt<T>(data: string): T {
     const decrypted = CryptoJS.AES.decrypt(data, this.key, {
       keySize: 128 / 8,
       iv: this.iv,

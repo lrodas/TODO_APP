@@ -1,3 +1,22 @@
 :host {
   display: block;
 }
+
+.bg-gradient {
+  background-image: linear-gradient(
+    to right,
+    var(--accent-completed-gradient-start),
+    var(--accent-completed-gradient-end)
+  );
+}
+
+.bg-check-icon {
+  background-image: url(assets/images/icon-check.svg);
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.text-primary {
+  color: var(--text-primary);
+}

@@ -28,7 +28,10 @@
               "src/styles.css",
               "node_modules/ngx-toastr/toastr.css"
             ],
-            "scripts": []
+            "scripts": [],
+            "externalDependencies": [
+              "assets/images/icon-check.svg"
+            ]
           },
           "configurations": {
             "production": {

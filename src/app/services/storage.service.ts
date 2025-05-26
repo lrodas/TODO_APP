@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { EncryptService } from './encrypt.service';
 
 @Injectable({
@@ -6,7 +6,7 @@ import { EncryptService } from './encrypt.service';
 })
 export class StorageService {
 
-  private readonly _encryptService: EncryptService = Inject(EncryptService);
+  private readonly _encryptService: EncryptService = inject(EncryptService);
 
   constructor() { }
 
@@ -30,7 +30,11 @@ export class StorageService {
       if (!decryptedValue) {
         return null;
       }
-      return JSON.parse(decryptedValue) as T;
+      if (typeof decryptedValue !== 'string') {
+        return decryptedValue as T;
+      } else {
+        return JSON.parse(decryptedValue) as T;
+      }
     } catch (error) {
       console.error('Error al obtener del localStorage:', error);
       return null;
