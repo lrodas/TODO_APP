@@ -1,1 +1,265 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+:root {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --primary-color: #007bff;
+}
+
+.light-theme {
+  /* Colores de Fondo */
+  --bg-primary: #FAFAFA; /* Fondo principal de la aplicación (Blanco muy suave) */
+  --bg-secondary: #FFFFFF; /* Fondo de los contenedores de tareas (Blanco puro) */
+  /* Las variables de degradado superior son para el asset de imagen o si se reproduce con CSS en un elemento específico */
+  --bg-gradient-top-start: #C058F3; /* Inicio del degradado superior (Violeta/Púrpura suave) */
+  --bg-gradient-top-end: #57DDFF; /* Fin del degradado superior (Azul claro/cielo) */
+
+  /* Colores de Texto */
+  --text-primary: #484B6A; /* Texto principal de las tareas no completadas (Gris oscuro) */
+  --text-secondary: #9797A9; /* Texto de contadores, filtros y placeholders (Gris medio) */
+  --text-completed: #D1D2DA; /* Texto de la tarea completada (Gris más claro, tenue) */
+  --text-white: #FFFFFF; /* Si se usa texto blanco sobre algún acento o degradado */
+
+  /* Colores de Borde */
+  --border-color: #E3E4F1; /* Bordes de los elementos de las tareas y el campo de entrada (Gris muy claro) */
+  --border-input: #E3E4F1; /* Mismo que el anterior, o si hay una ligera variación */
+
+  /* Colores de Acento y Estado */
+  --accent-sun-moon: #484B6A; /* Color del ícono de sol/luna (Luna, Gris oscuro) */
+  --accent-completed-gradient-start: #57DDFF; /* Mismo degradado para el check */
+  --accent-completed-gradient-end: #C058F3; /* Mismo degradado para el check */
+  --accent-hover: #E3E4F1; /* Color para estados de hover en los elementos (un gris claro) */
+  --accent-active-filter: #3A7BFD; /* Color para el filtro activo (Azul vibrante) */
+  --shadow-color: rgba(0, 0, 0, 0.1); /* Sombra más sutil y clara */
+}
+
+.dark-theme {
+  --bg-primary: #161722; /* Fondo oscuro principal */
+  --bg-secondary: #25273C; /* Fondo de contenedores de tareas */
+  --bg-gradient-top-start: #3F2B66; /* Estas variables ahora serían para el asset de imagen si lo usas */
+  --bg-gradient-top-end: #1A0B2C; /* Mantenerlas por si el asset es un degradado CSS en otro elemento */
+
+  --text-primary: #E0E1E4;
+  --text-secondary: #76778D;
+  --text-completed: #A2A4B8;
+  --text-white: #FFFFFF;
+
+  --border-color: #393A4C;
+  --border-input: #494C6B;
+
+  --accent-sun-moon: #FFFFFF;
+  --accent-completed-gradient-start: #57DDFF;
+  --accent-completed-gradient-end: #C058F3;
+  --accent-hover: #3A3C56; /* Ajustado ligeramente para que se vea bien sobre --bg-secondary */
+  --accent-active-filter: #3A7BFD;
+  --shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Estilos Generales del Body */
+body {
+  /* Fondo oscuro sólido únicamente, sin el degradado superior */
+  background-color: var(--bg-primary);
+
+  color: var(--text-primary); /* Color de texto principal para todo el body */
+  font-family: 'Josefin Sans', sans-serif; /* Asumiendo una fuente similar a la de la imagen */
+  margin: 0;
+  padding: 0;
+  min-height: 100vh; /* Asegura que el body ocupe al menos toda la altura de la ventana */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el contenido horizontalmente */
+}
+
+/* Contenedor Principal (donde va la aplicación To-Do) */
+.main-app-container {
+  max-width: 540px; /* Ancho máximo similar al diseño de escritorio */
+  width: 90%; /* Ancho responsivo */
+  margin-top: 80px; /* Espacio superior para el encabezado */
+  /* Si el degradado superior es un asset de imagen, este contenedor aún no lo tiene */
+  background-color: transparent; /* Permanece transparente si el fondo del body ya es el color base */
+  position: relative; /* Necesario para que el ícono de toggle pueda posicionarse absolutamente dentro del header */
+}
+
+/* Encabezado (ahora contiene el título y el toggle) */
+.header {
+  display: flex;
+  justify-content: space-between; /* Espacio entre el título y el ícono */
+  align-items: center;
+  width: 100%;
+  margin-bottom: 25px; /* Espacio entre el header y el input */
+  position: relative; /* Para que el theme-toggle pueda ser absoluto dentro de él */
+}
+
+h1 {
+  color: var(--text-white); /* Color blanco para el título "TODO" */
+  font-size: 2.5em; /* Tamaño de fuente para el título */
+  letter-spacing: 0.5em; /* Espaciado entre letras */
+  text-transform: uppercase;
+  margin: 0; /* Quita márgenes por defecto para mejor control con flexbox */
+  /* Si el header ya maneja el justify-content, no necesitas text-align: center aquí */
+}
+
+/* Estilos para el ícono de sol/luna en el encabezado */
+.theme-toggle {
+  cursor: pointer;
+  color: var(--accent-sun-moon);
+  font-size: 1.8em; /* Ajusta el tamaño del ícono */
+  /* Posicionamiento relativo dentro del header si el header es flex/grid */
+  /* Si necesitas que el toggle esté a la derecha del todo y el h1 al centro, puedes usar: */
+  /* margin-left: auto; */ /* Para empujar el ícono a la derecha si no hay espacio entre h1 y toggle */
+}
+
+
+/* Inputs de Texto */
+input[type="text"] {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-bottom: 0px solid var(--border-input);
+  padding: 15px 20px;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 1em;
+  outline: none;
+}
+
+input[type="text"]::placeholder {
+  color: var(--text-secondary);
+}
+
+input[type="text"]:focus {
+  border-color: var(--accent-active-filter);
+}
+
+/* Botones Genéricos */
+.btn {
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--accent-active-filter);
+  color: var(--text-white);
+}
+
+.btn-primary:hover {
+  background-color: #5a94ff;
+}
+
+/* Enlaces (para filtros "All", "Active", "Completed", "Clear Completed") */
+a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--text-primary);
+}
+
+a.active-filter {
+  color: var(--accent-active-filter);
+}
+
+/* Componentes de Lista */
+.list-container {
+  background-color: var(--bg-secondary);
+  border-radius: 5px;
+  margin-top: 25px;
+  box-shadow: 0 25px 50px -15px var(--shadow-color);
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--text-primary);
+  font-size: 1em;
+  transition: background-color 0.2s ease; /* Transición para hover */
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+.list-item:hover {
+    background-color: var(--accent-hover); /* Un ligero cambio de color al pasar el ratón */
+}
+
+/* Checkbox Personalizado */
+.custom-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border-input);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.custom-checkbox.checked {
+  background: linear-gradient(to bottom right, var(--accent-completed-gradient-start), var(--accent-completed-gradient-end));
+  border: none;
+}
+
+.custom-checkbox.checked::before {
+  content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="11" height="9"><path fill="none" stroke="%23FFF" stroke-width="2" d="M1 4.304L3.696 7l6-6"/></svg>');
+}
+
+/* Texto de la Tarea */
+.todo-text {
+  flex-grow: 1;
+  overflow-wrap: break-word;
+}
+
+.todo-text.completed {
+  color: var(--text-completed);
+  text-decoration: line-through;
+}
+
+/* Botón de Borrar */
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  margin-left: auto;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.list-item:hover .delete-btn {
+  opacity: 1;
+}
+
+.delete-btn svg {
+  fill: var(--text-secondary);
+}
+
+
+.list-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  color: var(--text-secondary);
+  font-size: 0.8em;
+  border-top: 1px solid var(--border-color); /* Separador del último item */
+  border-bottom-left-radius: 5px; /* Bordes redondeados inferiores */
+  border-bottom-right-radius: 5px;
+}
+
+.filter-options {
+  display: flex;
+  gap: 15px;
+}
